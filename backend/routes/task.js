@@ -1,13 +1,7 @@
 const express = require("express");
+const axios = require("axios");
 
 const router = express.Router();
-
-const twilio = require("twilio");
-
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
 
 let tasks = [];
 
@@ -17,31 +11,31 @@ router.post("/", async (req, res) => {
 
   tasks.push(task);
 
-  try {
-  await client.messages.create({
-    body: `🎓 CampusFlow Reminder
+  console.log("Task added:", task);
 
-Task: ${task.title}
+  const webhookUrl = process.env.N8N_DEADLINE_WEBHOOK_URL;
+  if (webhookUrl) {
+    try {
+      const payload = {
+        studentName: process.env.STUDENT_NAME || "Liya",
+        phone: process.env.STUDENT_PHONE || "+919876543210",
+        subject: task.subject,
+        taskTitle: task.title,
+        deadline: task.deadline
+      };
 
-Subject: ${task.subject}
+      console.log("Triggering n8n deadline webhook:", webhookUrl);
+      console.log("Payload:", payload);
 
-Deadline: ${task.deadline}
-
-Please complete your task on time.
-
-- CampusFlow Team`,
-
-    from: process.env.TWILIO_WHATSAPP_NUMBER,
-
-    to: "whatsapp:+910000000000"
-  });
-
-  console.log("WhatsApp Message Sent Successfully");
-} catch (error) {
-  console.log(error);
-}
-
-  console.log(tasks);
+      // Async post to n8n
+      await axios.post(webhookUrl, payload);
+      console.log("n8n webhook triggered successfully!");
+    } catch (error) {
+      console.error("Error triggering n8n webhook:", error.message);
+    }
+  } else {
+    console.log("N8N_DEADLINE_WEBHOOK_URL not set in env, skipping webhook trigger.");
+  }
 
   res.json({
     message: "Task Added Successfully 🎉",
@@ -53,4 +47,4 @@ router.get("/", (req, res) => {
   res.json(tasks);
 });
 
-module.exports = router;
+module.exports = router;

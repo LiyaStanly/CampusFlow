@@ -6,6 +6,8 @@ const aiRoutes = require("./routes/ai");
 const app = express();
 
 const taskRoutes = require("./routes/task");
+const attendanceRoutes = require("./routes/attendance");
+const noticeRoutes = require("./routes/notice");
 
 app.use(cors());
 app.use(express.json());
@@ -18,6 +20,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/task", taskRoutes);
+app.use("/attendance", attendanceRoutes);
+app.use("/notice", noticeRoutes);
 
 const PORT = 5000;
 

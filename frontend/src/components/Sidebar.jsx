@@ -11,35 +11,35 @@ function Sidebar() {
         padding: "20px",
       }}
     >
-      <h2 style={{ textAlign: "center", marginBottom: "40px" }}>
-        CampusFlow 🎓
+      <h2 style={{ textAlign: "center", marginBottom: "40px", fontWeight: "700", letterSpacing: "-0.5px" }}>
+        CampusFlow
       </h2>
 
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "20px",
+          gap: "12px",
         }}
       >
         <Link to="/dashboard" style={linkStyle}>
-          🏠 Dashboard
+          Dashboard
         </Link>
 
         <Link to="/add-task" style={linkStyle}>
-          📝 Add Task
+          Add Task
         </Link>
 
         <Link to="/notice" style={linkStyle}>
-          📣 Notice AI
+          Notice AI
         </Link>
 
         <Link to="/attendance" style={linkStyle}>
-          ⚠ Attendance
+          Attendance
         </Link>
 
         <Link to="/logs" style={linkStyle}>
-          ⚙ Automation Logs
+          Automation Logs
         </Link>
       </div>
     </div>

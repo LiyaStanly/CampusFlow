@@ -4,8 +4,14 @@ import Sidebar from "../components/Sidebar";
 
 function Dashboard() {
   const [tasks, setTasks] = useState([]);
+  const [attendance, setAttendance] = useState([]);
 
-    const fetchTasks = async () => {
+  useEffect(() => {
+    fetchTasks();
+    fetchAttendance();
+  }, []);
+
+  const fetchTasks = async () => {
     try {
       const res = await axios.get("http://localhost:5000/task");
       setTasks(res.data);
@@ -14,9 +20,21 @@ function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  const fetchAttendance = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/attendance");
+      setAttendance(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const atRiskCount = attendance.filter((item) => {
+    if (item.hasLab) {
+      return item.theoryPercent < 75 || item.labPercent < 75;
+    }
+    return item.theoryPercent < 75;
+  }).length;
 
 
   return (
@@ -41,6 +59,18 @@ function Dashboard() {
           <div style={cardStyle}>
             <h3>Pending Tasks</h3>
             <h1>{tasks.length}</h1>
+          </div>
+
+          <div style={{
+            ...cardStyle,
+            borderColor: atRiskCount > 0 ? "#ef4444" : "#ddd",
+            backgroundColor: atRiskCount > 0 ? "rgba(239, 68, 68, 0.05)" : "transparent"
+          }}>
+            <h3>Attendance Alerts</h3>
+            <h1 style={{ color: atRiskCount > 0 ? "#ef4444" : "inherit" }}>{atRiskCount}</h1>
+            <p style={{ fontSize: "14px", color: atRiskCount > 0 ? "#f87171" : "#10b981", fontWeight: "600" }}>
+              {atRiskCount > 0 ? `${atRiskCount} Subjects At Risk` : "All subjects safe"}
+            </p>
           </div>
 
           <div style={cardStyle}>

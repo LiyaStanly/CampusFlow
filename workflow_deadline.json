@@ -1,0 +1,126 @@
+{
+  "name": "CampusFlow - Deadline Reminder Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "deadline",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "webhook-node",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "primary",
+          "mode": "id"
+        },
+        "start": "={{ $json.body.deadline }}",
+        "end": "={{ new Date(new Date($json.body.deadline).getTime() + 60*60*1000).toISOString() }}",
+        "additionalFields": {
+          "description": "=Hey {{ $json.body.studentName }}, your {{ $json.body.subject }} task: {{ $json.body.taskTitle }} is due soon! Tracked automatically by CampusFlow.",
+          "summary": "=🎓 CampusFlow: {{ $json.body.subject }} - {{ $json.body.taskTitle }}"
+        }
+      },
+      "id": "gcal-node",
+      "name": "Google Calendar",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [
+        350,
+        300
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "gcal-creds",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resumeAmount": "={{ Math.max(0, Math.floor((new Date($json.body.reminderTime).getTime() - Date.now()) / 1000)) }}",
+        "resumeUnit": "seconds"
+      },
+      "id": "wait-node",
+      "name": "Wait Node",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        600,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "from": "whatsapp:+14155238886",
+        "to": "={{ $json.body.phone }}",
+        "message": "=⏰ Hi {{ $json.body.studentName }}! Your {{ $json.body.subject }} assignment '{{ $json.body.taskTitle }}' is due tomorrow! Check your Google Calendar. — CampusFlow 🎓"
+      },
+      "id": "twilio-node",
+      "name": "Twilio WhatsApp",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        850,
+        300
+      ],
+      "credentials": {
+        "twilioApi": {
+          "id": "twilio-creds",
+          "name": "Twilio account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar": {
+      "main": [
+        [
+          {
+            "node": "Wait Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait Node": {
+      "main": [
+        [
+          {
+            "node": "Twilio WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {}
+}
