@@ -4,8 +4,9 @@ function Notice() {
   return (
     <div style={{ display: "flex" }}>
       <Sidebar />
+
       <div style={{ padding: "30px" }}>
-        <h1>Notice Page</h1>
+        <h1>Notice Summarizer</h1>
       </div>
     </div>
   );

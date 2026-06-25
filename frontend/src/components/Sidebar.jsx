@@ -6,16 +6,22 @@ function Sidebar() {
       style={{
         width: "250px",
         height: "100vh",
-        backgroundColor: "#1e293b",
+        backgroundColor: "#0f172a",
         color: "white",
         padding: "20px",
       }}
     >
       <h2 style={{ textAlign: "center", marginBottom: "40px" }}>
-        CampusFlow
+        CampusFlow 🎓
       </h2>
 
-      <nav style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+        }}
+      >
         <Link to="/dashboard" style={linkStyle}>
           🏠 Dashboard
         </Link>
@@ -35,17 +41,17 @@ function Sidebar() {
         <Link to="/logs" style={linkStyle}>
           ⚙ Automation Logs
         </Link>
-      </nav>
+      </div>
     </div>
   );
 }
 
 const linkStyle = {
-  color: "white",
   textDecoration: "none",
-  padding: "10px",
-  borderRadius: "5px",
+  color: "white",
   backgroundColor: "#334155",
+  padding: "12px",
+  borderRadius: "8px",
 };
 
 export default Sidebar;

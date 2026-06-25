@@ -1,6 +1,23 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import Sidebar from "../components/Sidebar";
 
 function Dashboard() {
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/task");
+      setTasks(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div style={{ display: "flex" }}>
       <Sidebar />
@@ -17,54 +34,53 @@ function Dashboard() {
         >
           <div style={cardStyle}>
             <h3>Total Tasks</h3>
-            <h1>8</h1>
+            <h1>{tasks.length}</h1>
           </div>
 
           <div style={cardStyle}>
             <h3>Pending Tasks</h3>
-            <h1>3</h1>
+            <h1>{tasks.length}</h1>
           </div>
 
           <div style={cardStyle}>
             <h3>AI Tip</h3>
-            <p>Start preparing for OS internals today.</p>
+            <p>Complete one task at a time.</p>
           </div>
         </div>
 
-        <h2 style={{ marginTop: "40px" }}>Upcoming Deadlines</h2>
+        <h2 style={{ marginTop: "40px" }}>
+          Upcoming Deadlines
+        </h2>
 
-        <div style={deadlineStyle}>
-          <h3>OS Assignment</h3>
-          <p>25 June 2026</p>
-        </div>
+        {tasks.map((task, index) => (
+          <div key={index} style={taskCard}>
+            <h3>{task.title}</h3>
 
-        <div style={deadlineStyle}>
-          <h3>DBMS Project</h3>
-          <p>28 June 2026</p>
-        </div>
+            <p>Subject: {task.subject}</p>
 
-        <div style={deadlineStyle}>
-          <h3>CN Quiz</h3>
-          <p>29 June 2026</p>
-        </div>
+            <p>
+              Deadline:{" "}
+              {new Date(task.deadline).toLocaleString()}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
 const cardStyle = {
-  border: "1px solid #ddd",
-  padding: "20px",
-  borderRadius: "10px",
   width: "250px",
-  boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
+  padding: "20px",
+  border: "1px solid #ddd",
+  borderRadius: "10px",
 };
 
-const deadlineStyle = {
+const taskCard = {
   border: "1px solid #ddd",
-  marginTop: "15px",
   padding: "15px",
   borderRadius: "10px",
+  marginTop: "15px",
 };
 
 export default Dashboard;

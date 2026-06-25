@@ -4,8 +4,9 @@ function Logs() {
   return (
     <div style={{ display: "flex" }}>
       <Sidebar />
+
       <div style={{ padding: "30px" }}>
-        <h1>Logs Page</h1>
+        <h1>Automation Logs</h1>
       </div>
     </div>
   );
