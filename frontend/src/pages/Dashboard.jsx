@@ -5,11 +5,7 @@ import Sidebar from "../components/Sidebar";
 function Dashboard() {
   const [tasks, setTasks] = useState([]);
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
-  const fetchTasks = async () => {
+    const fetchTasks = async () => {
     try {
       const res = await axios.get("http://localhost:5000/task");
       setTasks(res.data);
@@ -17,6 +13,11 @@ function Dashboard() {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
 
   return (
     <div style={{ display: "flex" }}>
