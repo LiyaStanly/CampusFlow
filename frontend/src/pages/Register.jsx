@@ -1,6 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
+
+    const navigate = useNavigate();
+
   return (
     <div style={{
       display: "flex",
@@ -62,16 +65,19 @@ function Register() {
           style={{ width: "100%", padding: "10px", marginBottom: "15px" }}
         />
 
-        <button style={{
-          width: "100%",
-          padding: "10px",
-          background: "#16a34a",
-          color: "white",
-          border: "none"
-        }}>
-          Register
-        </button>
-
+<button
+  onClick={() => navigate("/dashboard")}
+  style={{
+    width: "100%",
+    padding: "10px",
+    background: "#16a34a",
+    color: "white",
+    border: "none",
+    cursor: "pointer"
+  }}
+>
+  Register
+</button>
         <p style={{ textAlign: "center", marginTop: "15px" }}>
           Already have an account? <Link to="/">Login</Link>
         </p>
